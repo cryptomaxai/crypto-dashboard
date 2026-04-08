@@ -1,11 +1,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>Crypto Dashboard</title>
+<title>User Panel</title>
 
 <style>
+
 body{
-background:#022c22;
+background:#021b1b;
 color:white;
 font-family:sans-serif;
 text-align:center;
@@ -13,112 +14,189 @@ text-align:center;
 
 .card{
 background:#064e3b;
-padding:20px;
 margin:20px;
-border-radius:15px;
+padding:20px;
+border-radius:10px;
 }
 
 button{
 background:#22c55e;
 border:none;
-padding:10px 20px;
-margin:5px;
-border-radius:10px;
+padding:12px;
+margin:6px;
+border-radius:6px;
 color:white;
+font-size:15px;
 }
 
-.page{
-display:none;
+input{
+padding:10px;
+border-radius:6px;
+border:none;
 }
 
 </style>
-
-<script>
-
-function show(page){
-document.getElementById("home").style.display="none";
-document.getElementById("deposit").style.display="none";
-document.getElementById("withdraw").style.display="none";
-document.getElementById("invite").style.display="none";
-
-document.getElementById(page).style.display="block";
-}
-
-</script>
 
 </head>
 
 <body>
 
-<h1>Crypto Dashboard</h1>
-
-<div id="home">
-
-<div class="card">
-<h2>Balance</h2>
-<h3>$0.00</h3>
-</div>
-
-<button onclick="show('deposit')">Deposit</button>
-<button onclick="show('withdraw')">Withdraw</button>
-<button onclick="show('invite')">Invite</button>
-
-</div>
-
-
-<div id="deposit" class="page">
-
-<div class="card">
-<h2>Deposit USDT</h2>
-<p>Send USDT to this wallet</p>
-<p>TRC20_WALLET_ADDRESS</p>
-
-<button onclick="show('home')">Back</button>
-</div>
-
-</div>
-
-
-<div id="withdraw" class="page">
+<h1>User Dashboard</h1>
 
 <div class="card">
 
-<h2>Withdraw</h2>
+<h2>Balance: $<span id="balance">0</span></h2>
 
-<input placeholder="Wallet address"><br><br>
-<input placeholder="Amount"><br><br>
+<button onclick="claim()">Claim Profit</button>
 
-<button>Submit</button>
+</div>
+
+
+<div class="card">
+
+<h3>Referral</h3>
+
+<input id="refLink" style="width:80%" readonly>
+
 <br><br>
 
-<button onclick="show('home')">Back</button>
+<button onclick="copyRef()">Copy Referral</button>
+
+<p>Referrals: <span id="refCount">0</span></p>
 
 </div>
 
-</div>
-
-
-<div id="invite" class="page">
 
 <div class="card">
 
-<h2>Invite Friends</h2>
+<h3>Deposit</h3>
 
-<p>Your referral link:</p>
+<p>Send USDT to this wallet</p>
 
-<p>https://t.me/BTCTradingAI_bot</p>
+<b>TXXXXXXXXXXXX</b>
 
-<a href="https://t.me/BTCTradingAI_bot">
+</div>
+
+
+<div class="card">
+
+<h3>Withdraw</h3>
+
+<input id="withdrawAmount" placeholder="Amount">
+
+<br><br>
+
+<button onclick="withdraw()">Request Withdraw</button>
+
+</div>
+
+
+<div class="card">
+
+<a href="https://t.me/YOUR_TELEGRAM_BOT">
+
 <button>Open Telegram Bot</button>
+
 </a>
 
-<br><br>
-
-<button onclick="show('home')">Back</button>
-
 </div>
 
-</div>
+
+<script>
+
+const API="https://crypto-backend-4g2j.onrender.com";
+
+let userId=localStorage.getItem("uid");
+
+if(!userId){
+
+userId=Date.now().toString();
+
+localStorage.setItem("uid",userId);
+
+fetch(API+"/register",{
+
+method:"POST",
+
+headers:{"Content-Type":"application/json"},
+
+body:JSON.stringify({userId:userId})
+
+});
+
+}
+
+document.getElementById("refLink").value=
+
+location.origin+location.pathname+"?ref="+userId;
+
+
+function loadUser(){
+
+fetch(API+"/user/"+userId)
+
+.then(r=>r.json())
+
+.then(data=>{
+
+document.getElementById("balance").innerText=data.balance || 0;
+
+document.getElementById("refCount").innerText=data.referrals || 0;
+
+});
+
+}
+
+loadUser();
+
+
+function claim(){
+
+fetch(API+"/claim",{
+
+method:"POST",
+
+headers:{"Content-Type":"application/json"},
+
+body:JSON.stringify({userId:userId})
+
+})
+
+.then(r=>r.json())
+
+.then(data=>{
+
+alert("New Balance: "+data.balance);
+
+loadUser();
+
+});
+
+}
+
+
+function copyRef(){
+
+navigator.clipboard.writeText(
+
+document.getElementById("refLink").value
+
+);
+
+alert("Referral link copied");
+
+}
+
+
+function withdraw(){
+
+let amount=document.getElementById("withdrawAmount").value;
+
+alert("Withdraw request: $"+amount+" sent to admin");
+
+}
+
+</script>
 
 </body>
 </html>
