@@ -1,20 +1,14 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>AI BTC</title>
+<title>Crypto Dashboard</title>
 
 <style>
-
 body{
 background:#022c22;
-font-family:sans-serif;
 color:white;
+font-family:sans-serif;
 text-align:center;
-}
-
-.container{
-max-width:400px;
-margin:auto;
 }
 
 .card{
@@ -27,28 +21,27 @@ border-radius:15px;
 button{
 background:#22c55e;
 border:none;
-padding:12px;
+padding:10px 20px;
 margin:5px;
 border-radius:10px;
 color:white;
-font-size:16px;
 }
 
-input{
-padding:10px;
-margin:5px;
-border-radius:8px;
-border:none;
-width:80%;
+.page{
+display:none;
 }
 
 </style>
 
 <script>
 
-function login(){
-document.getElementById("login").style.display="none";
-document.getElementById("dashboard").style.display="block";
+function show(page){
+document.getElementById("home").style.display="none";
+document.getElementById("deposit").style.display="none";
+document.getElementById("withdraw").style.display="none";
+document.getElementById("invite").style.display="none";
+
+document.getElementById(page).style.display="block";
 }
 
 </script>
@@ -57,45 +50,71 @@ document.getElementById("dashboard").style.display="block";
 
 <body>
 
-<div class="container">
+<h1>Crypto Dashboard</h1>
 
-<div id="login" class="card">
-
-<h2>AI BTC Login</h2>
-
-<input type="text" placeholder="Username"><br>
-<input type="password" placeholder="Password"><br>
-
-<button onclick="login()">Login</button>
-
-</div>
-
-
-<div id="dashboard" style="display:none">
+<div id="home">
 
 <div class="card">
-
 <h2>Balance</h2>
 <h3>$0.00</h3>
+</div>
+
+<button onclick="show('deposit')">Deposit</button>
+<button onclick="show('withdraw')">Withdraw</button>
+<button onclick="show('invite')">Invite</button>
 
 </div>
 
+
+<div id="deposit" class="page">
+
+<div class="card">
+<h2>Deposit USDT</h2>
+<p>Send USDT to this wallet</p>
+<p>TRC20_WALLET_ADDRESS</p>
+
+<button onclick="show('home')">Back</button>
+</div>
+
+</div>
+
+
+<div id="withdraw" class="page">
 
 <div class="card">
 
-<button>Recharge</button>
-<button>Withdraw</button>
-<button>Invite</button>
+<h2>Withdraw</h2>
+
+<input placeholder="Wallet address"><br><br>
+<input placeholder="Amount"><br><br>
+
+<button>Submit</button>
+<br><br>
+
+<button onclick="show('home')">Back</button>
 
 </div>
 
+</div>
+
+
+<div id="invite" class="page">
 
 <div class="card">
 
-<h3>Daily ROI</h3>
-<p>20%</p>
+<h2>Invite Friends</h2>
 
-</div>
+<p>Your referral link:</p>
+
+<p>https://t.me/BTCTradingAI_bot</p>
+
+<a href="https://t.me/BTCTradingAI_bot">
+<button>Open Telegram Bot</button>
+</a>
+
+<br><br>
+
+<button onclick="show('home')">Back</button>
 
 </div>
 
@@ -103,8 +122,3 @@ document.getElementById("dashboard").style.display="block";
 
 </body>
 </html>
-<a href="deposit.html"><button>Recharge</button></a>
-
-<a href="withdraw.html"><button>Withdraw</button></a>
-
-<a href="invite.html"><button>Invite</button></a>
