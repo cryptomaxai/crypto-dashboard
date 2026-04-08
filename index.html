@@ -1,303 +1,297 @@
 <!DOCTYPE html>
 <html>
 <head>
+
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Demo Crypto Dashboard</title>
+
+<title>AI BTC</title>
 
 <style>
+
 body{
 margin:0;
 font-family:sans-serif;
-background:#021b1b;
+background:#021f1b;
 color:white;
+}
+
+.header{
+padding:15px;
+font-size:20px;
 text-align:center;
+font-weight:bold;
 }
 
 .card{
-background:#064e3b;
-margin:15px;
+background:#043c34;
+margin:12px;
 padding:15px;
 border-radius:15px;
 }
 
-input{
-padding:10px;
-margin:10px;
-border:none;
-border-radius:6px;
+.balance{
+font-size:26px;
+text-align:center;
+margin-top:10px;
 }
 
-button{
-padding:10px 20px;
+.greenbtn{
+background:#21c087;
 border:none;
-border-radius:8px;
-background:#2fd39b;
+padding:12px;
+border-radius:10px;
 color:white;
+width:45%;
 }
 
-.grid{
+.row{
 display:flex;
-gap:10px;
-}
-
-.grid button{
-flex:1;
+justify-content:space-between;
+margin-top:10px;
 }
 
 .bottom{
 position:fixed;
 bottom:0;
 width:100%;
-background:#053b35;
+background:#042e29;
 display:flex;
 justify-content:space-around;
-padding:10px;
+padding:12px;
 }
 
-.page{display:none}
+.bottom div{
+cursor:pointer;
+}
+
+.page{
+display:none;
+}
+
+.roi{
+display:flex;
+justify-content:space-between;
+padding:6px 0;
+}
+
+input{
+width:100%;
+padding:10px;
+border-radius:8px;
+border:none;
+}
+
+.copy{
+margin-top:10px;
+background:#21c087;
+border:none;
+padding:10px;
+border-radius:10px;
+}
+
 </style>
 
 </head>
 
 <body>
 
-<h2>Demo Platform</h2>
-
-<div id="loginPage">
-
-<input id="phone" placeholder="Mobile number"><br>
-
-<input id="pass" type="password" placeholder="Password"><br>
-
-<button onclick="login()">Login</button>
-
-<br><br>
-
-<button onclick="showRegister()">Create account</button>
-
-</div>
+<div class="header">AI BTC</div>
 
 
-<div id="registerPage" class="page">
+<!-- HOME PAGE -->
 
-<input id="rphone" placeholder="Mobile number"><br>
-
-<input id="rpass" type="password" placeholder="Password"><br>
-
-<button onclick="register()">Register</button>
-
-</div>
-
-
-<div id="dashboard" class="page">
+<div id="homePage">
 
 <div class="card">
 
-<h3>Balance: $<span id="balance">0</span></h3>
+<div>You Earned: <b>$<span id="bal">15.24</span></b></div>
 
 </div>
 
 
 <div class="card">
 
-<h3>Daily Claim</h3>
+<div style="text-align:center">USDT / USDC</div>
 
-<h2 id="timer">24:00:00</h2>
+<div class="balance">$53.39</div>
 
-<button id="claimBtn" onclick="claim()" disabled>
-Claim Demo Reward
+<div style="text-align:center;margin-top:10px">
+
+Daily Earn: $10.68 (+20%)
+
+</div>
+
+<div style="text-align:center;margin-top:10px">
+
+Settlement time:
+
+<span id="timer">16:13:43</span>
+
+</div>
+
+</div>
+
+
+<div class="card">
+
+<div class="row">
+
+<button class="greenbtn">Recharge</button>
+
+<button class="greenbtn" onclick="showPage('friends')">
+
+Invitation
+
 </button>
 
 </div>
 
-
-<div class="card grid">
-
-<button>Recharge (Demo)</button>
-
-<button onclick="showReferral()">Refer</button>
-
 </div>
 
 
 <div class="card">
 
-<h3>Referral</h3>
+<h3>AI BTC ROI</h3>
 
-<input id="refLink" readonly style="width:90%">
-
-<br><br>
-
-<button onclick="copyRef()">Copy Link</button>
-
-<p>Total Referrals: <span id="refCount">0</span></p>
+<div class="roi"><span>$10</span><span>20%</span></div>
+<div class="roi"><span>$100</span><span>20.5%</span></div>
+<div class="roi"><span>$300</span><span>21%</span></div>
+<div class="roi"><span>$900</span><span>22%</span></div>
+<div class="roi"><span>$2700</span><span>24%</span></div>
 
 </div>
 
+</div>
+
+
+<!-- FRIENDS PAGE -->
+
+<div id="friendsPage" class="page">
 
 <div class="card">
 
-<h3>Withdraw (Demo)</h3>
+<h2>Referral and Earn</h2>
 
-<input id="amount" placeholder="Amount"><br>
+<p>
 
-<button onclick="withdraw()">Submit</button>
+Earn bonus for each referral.
+
+</p>
+
+<h3>Your Referral Link</h3>
+
+<input id="refLink">
+
+<button class="copy" onclick="copyRef()">
+
+Copy Link
+
+</button>
 
 </div>
 
 </div>
 
+
+<!-- INTRO PAGE -->
+
+<div id="introPage" class="page">
+
+<div class="card">
+
+<h2>Introduction</h2>
+
+<p>
+
+AI BTC trading platform demo dashboard.
+
+</p>
+
+</div>
+
+</div>
+
+
+<!-- TASK PAGE -->
+
+<div id="taskPage" class="page">
+
+<div class="card">
+
+<h2>Tasks</h2>
+
+<p>Invite friends to earn rewards.</p>
+
+</div>
+
+</div>
+
+
+<!-- BOTTOM MENU -->
 
 <div class="bottom">
 
-<div>Home</div>
+<div onclick="showPage('home')">Home</div>
 
-<div>Friends</div>
+<div onclick="showPage('friends')">Friends</div>
 
-<div>Info</div>
+<div onclick="showPage('intro')">Introduction</div>
 
-<div>Task</div>
+<div onclick="showPage('task')">Task</div>
 
 </div>
 
 
 <script>
 
-let user=localStorage.getItem("loginUser");
+function showPage(page){
 
-if(user){
-showDashboard();
+document.getElementById("homePage").style.display="none";
+document.getElementById("friendsPage").style.display="none";
+document.getElementById("introPage").style.display="none";
+document.getElementById("taskPage").style.display="none";
+
+if(page=="home"){
+document.getElementById("homePage").style.display="block";
 }
 
-function login(){
-
-let phone=document.getElementById("phone").value;
-let pass=document.getElementById("pass").value;
-
-let saved=localStorage.getItem("user_"+phone);
-
-if(saved==pass){
-
-localStorage.setItem("loginUser",phone);
-showDashboard();
-
-}else{
-
-alert("Wrong login");
-
+if(page=="friends"){
+document.getElementById("friendsPage").style.display="block";
 }
 
+if(page=="intro"){
+document.getElementById("introPage").style.display="block";
 }
 
-function register(){
-
-let phone=document.getElementById("rphone").value;
-let pass=document.getElementById("rpass").value;
-
-localStorage.setItem("user_"+phone,pass);
-
-alert("Account created");
-
-document.getElementById("registerPage").style.display="none";
-document.getElementById("loginPage").style.display="block";
+if(page=="task"){
+document.getElementById("taskPage").style.display="block";
+}
 
 }
 
-function showRegister(){
 
-document.getElementById("loginPage").style.display="none";
-document.getElementById("registerPage").style.display="block";
-
-}
-
-function showDashboard(){
-
-document.getElementById("loginPage").style.display="none";
-document.getElementById("registerPage").style.display="none";
-document.getElementById("dashboard").style.display="block";
-
-createReferral();
-startTimer();
-
-}
-
-function claim(){
-
-let bal=document.getElementById("balance");
-
-bal.innerText=parseInt(bal.innerText)+2;
-
-localStorage.setItem("lastClaim",Date.now());
-
-alert("Demo reward added");
-
-}
-
-function withdraw(){
-
-let amount=document.getElementById("amount").value;
-
-alert("Withdraw request submitted: $"+amount);
-
-}
-
-function createReferral(){
-
-let id=localStorage.getItem("loginUser");
+let user=Math.floor(Math.random()*100000)
 
 document.getElementById("refLink").value=
-location.href+"?ref="+id;
 
-}
+location.href+"?ref="+user
+
 
 function copyRef(){
 
 navigator.clipboard.writeText(
+
 document.getElementById("refLink").value
-);
 
-alert("Copied");
+)
 
-}
-
-function startTimer(){
-
-let claimBtn=document.getElementById("claimBtn");
-let timerText=document.getElementById("timer");
-
-let last=localStorage.getItem("lastClaim");
-
-if(!last){
-
-last=Date.now();
-localStorage.setItem("lastClaim",last);
-
-}
-
-setInterval(()=>{
-
-let diff=86400000-(Date.now()-last);
-
-if(diff<=0){
-
-timerText.innerText="Ready";
-claimBtn.disabled=false;
-
-}else{
-
-let h=Math.floor(diff/1000/60/60);
-let m=Math.floor(diff/1000/60)%60;
-let s=Math.floor(diff/1000)%60;
-
-timerText.innerText=h+":"+m+":"+s;
-
-}
-
-},1000);
+alert("Referral link copied")
 
 }
 
 </script>
 
+
 </body>
+
 </html>
