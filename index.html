@@ -4,17 +4,23 @@
 <title>AI BTC</title>
 
 <style>
+
 body{
 background:#022c22;
-color:white;
 font-family:sans-serif;
+color:white;
 text-align:center;
+}
+
+.container{
+max-width:400px;
+margin:auto;
 }
 
 .card{
 background:#064e3b;
-margin:20px;
 padding:20px;
+margin:20px;
 border-radius:15px;
 }
 
@@ -22,33 +28,77 @@ button{
 background:#22c55e;
 border:none;
 padding:12px;
-margin:8px;
+margin:5px;
 border-radius:10px;
 color:white;
 font-size:16px;
 }
+
+input{
+padding:10px;
+margin:5px;
+border-radius:8px;
+border:none;
+width:80%;
+}
+
 </style>
+
+<script>
+
+function login(){
+document.getElementById("login").style.display="none";
+document.getElementById("dashboard").style.display="block";
+}
+
+</script>
 
 </head>
 
 <body>
 
-<h1>AI BTC</h1>
+<div class="container">
 
-<div class="card">
-<h2>Balance</h2>
-<h3>$0.00</h3>
+<div id="login" class="card">
+
+<h2>AI BTC Login</h2>
+
+<input type="text" placeholder="Username"><br>
+<input type="password" placeholder="Password"><br>
+
+<button onclick="login()">Login</button>
+
 </div>
 
+
+<div id="dashboard" style="display:none">
+
 <div class="card">
+
+<h2>Balance</h2>
+<h3>$0.00</h3>
+
+</div>
+
+
+<div class="card">
+
 <button>Recharge</button>
 <button>Withdraw</button>
 <button>Invite</button>
+
 </div>
 
+
 <div class="card">
-<h3>Daily Profit</h3>
-<p>20% ROI</p>
+
+<h3>Daily ROI</h3>
+<p>20%</p>
+
+</div>
+
+</div>
+
 </div>
 
 </body>
