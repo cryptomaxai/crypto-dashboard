@@ -1,53 +1,121 @@
 <!DOCTYPE html>
 <html>
 <head>
-<title>User Panel</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Demo Crypto Dashboard</title>
 
 <style>
-
 body{
+margin:0;
+font-family:sans-serif;
 background:#021b1b;
 color:white;
-font-family:sans-serif;
 text-align:center;
 }
 
 .card{
 background:#064e3b;
-margin:20px;
-padding:20px;
-border-radius:10px;
-}
-
-button{
-background:#22c55e;
-border:none;
-padding:12px;
-margin:6px;
-border-radius:6px;
-color:white;
-font-size:15px;
+margin:15px;
+padding:15px;
+border-radius:15px;
 }
 
 input{
 padding:10px;
-border-radius:6px;
+margin:10px;
 border:none;
+border-radius:6px;
 }
 
+button{
+padding:10px 20px;
+border:none;
+border-radius:8px;
+background:#2fd39b;
+color:white;
+}
+
+.grid{
+display:flex;
+gap:10px;
+}
+
+.grid button{
+flex:1;
+}
+
+.bottom{
+position:fixed;
+bottom:0;
+width:100%;
+background:#053b35;
+display:flex;
+justify-content:space-around;
+padding:10px;
+}
+
+.page{display:none}
 </style>
 
 </head>
 
 <body>
 
-<h1>User Dashboard</h1>
+<h2>Demo Platform</h2>
+
+<div id="loginPage">
+
+<input id="phone" placeholder="Mobile number"><br>
+
+<input id="pass" type="password" placeholder="Password"><br>
+
+<button onclick="login()">Login</button>
+
+<br><br>
+
+<button onclick="showRegister()">Create account</button>
+
+</div>
+
+
+<div id="registerPage" class="page">
+
+<input id="rphone" placeholder="Mobile number"><br>
+
+<input id="rpass" type="password" placeholder="Password"><br>
+
+<button onclick="register()">Register</button>
+
+</div>
+
+
+<div id="dashboard" class="page">
 
 <div class="card">
 
-<h2>Balance: $<span id="balance">0</span></h2>
+<h3>Balance: $<span id="balance">0</span></h3>
 
-<button onclick="claim()">Claim Profit</button>
+</div>
+
+
+<div class="card">
+
+<h3>Daily Claim</h3>
+
+<h2 id="timer">24:00:00</h2>
+
+<button id="claimBtn" onclick="claim()" disabled>
+Claim Demo Reward
+</button>
+
+</div>
+
+
+<div class="card grid">
+
+<button>Recharge (Demo)</button>
+
+<button onclick="showReferral()">Refer</button>
 
 </div>
 
@@ -56,143 +124,176 @@ border:none;
 
 <h3>Referral</h3>
 
-<input id="refLink" style="width:80%" readonly>
+<input id="refLink" readonly style="width:90%">
 
 <br><br>
 
-<button onclick="copyRef()">Copy Referral</button>
+<button onclick="copyRef()">Copy Link</button>
 
-<p>Referrals: <span id="refCount">0</span></p>
-
-</div>
-
-
-<div class="card">
-
-<h3>Deposit</h3>
-
-<p>Send USDT to this wallet</p>
-
-<b>TXXXXXXXXXXXX</b>
+<p>Total Referrals: <span id="refCount">0</span></p>
 
 </div>
 
 
 <div class="card">
 
-<h3>Withdraw</h3>
+<h3>Withdraw (Demo)</h3>
 
-<input id="withdrawAmount" placeholder="Amount">
+<input id="amount" placeholder="Amount"><br>
 
-<br><br>
+<button onclick="withdraw()">Submit</button>
 
-<button onclick="withdraw()">Request Withdraw</button>
+</div>
 
 </div>
 
 
-<div class="card">
+<div class="bottom">
 
-<a href="https://t.me/YOUR_TELEGRAM_BOT">
+<div>Home</div>
 
-<button>Open Telegram Bot</button>
+<div>Friends</div>
 
-</a>
+<div>Info</div>
+
+<div>Task</div>
 
 </div>
 
 
 <script>
 
-const API="https://crypto-backend-4g2j.onrender.com";
+let user=localStorage.getItem("loginUser");
 
-let userId=localStorage.getItem("uid");
+if(user){
+showDashboard();
+}
 
-if(!userId){
+function login(){
 
-userId=Date.now().toString();
+let phone=document.getElementById("phone").value;
+let pass=document.getElementById("pass").value;
 
-localStorage.setItem("uid",userId);
+let saved=localStorage.getItem("user_"+phone);
 
-fetch(API+"/register",{
+if(saved==pass){
 
-method:"POST",
+localStorage.setItem("loginUser",phone);
+showDashboard();
 
-headers:{"Content-Type":"application/json"},
+}else{
 
-body:JSON.stringify({userId:userId})
-
-});
+alert("Wrong login");
 
 }
 
-document.getElementById("refLink").value=
+}
 
-location.origin+location.pathname+"?ref="+userId;
+function register(){
 
+let phone=document.getElementById("rphone").value;
+let pass=document.getElementById("rpass").value;
 
-function loadUser(){
+localStorage.setItem("user_"+phone,pass);
 
-fetch(API+"/user/"+userId)
+alert("Account created");
 
-.then(r=>r.json())
-
-.then(data=>{
-
-document.getElementById("balance").innerText=data.balance || 0;
-
-document.getElementById("refCount").innerText=data.referrals || 0;
-
-});
+document.getElementById("registerPage").style.display="none";
+document.getElementById("loginPage").style.display="block";
 
 }
 
-loadUser();
+function showRegister(){
 
+document.getElementById("loginPage").style.display="none";
+document.getElementById("registerPage").style.display="block";
+
+}
+
+function showDashboard(){
+
+document.getElementById("loginPage").style.display="none";
+document.getElementById("registerPage").style.display="none";
+document.getElementById("dashboard").style.display="block";
+
+createReferral();
+startTimer();
+
+}
 
 function claim(){
 
-fetch(API+"/claim",{
+let bal=document.getElementById("balance");
 
-method:"POST",
+bal.innerText=parseInt(bal.innerText)+2;
 
-headers:{"Content-Type":"application/json"},
+localStorage.setItem("lastClaim",Date.now());
 
-body:JSON.stringify({userId:userId})
-
-})
-
-.then(r=>r.json())
-
-.then(data=>{
-
-alert("New Balance: "+data.balance);
-
-loadUser();
-
-});
+alert("Demo reward added");
 
 }
 
+function withdraw(){
+
+let amount=document.getElementById("amount").value;
+
+alert("Withdraw request submitted: $"+amount);
+
+}
+
+function createReferral(){
+
+let id=localStorage.getItem("loginUser");
+
+document.getElementById("refLink").value=
+location.href+"?ref="+id;
+
+}
 
 function copyRef(){
 
 navigator.clipboard.writeText(
-
 document.getElementById("refLink").value
-
 );
 
-alert("Referral link copied");
+alert("Copied");
 
 }
 
+function startTimer(){
 
-function withdraw(){
+let claimBtn=document.getElementById("claimBtn");
+let timerText=document.getElementById("timer");
 
-let amount=document.getElementById("withdrawAmount").value;
+let last=localStorage.getItem("lastClaim");
 
-alert("Withdraw request: $"+amount+" sent to admin");
+if(!last){
+
+last=Date.now();
+localStorage.setItem("lastClaim",last);
+
+}
+
+setInterval(()=>{
+
+let diff=86400000-(Date.now()-last);
+
+if(diff<=0){
+
+timerText.innerText="Ready";
+claimBtn.disabled=false;
+
+}else{
+
+let h=Math.floor(diff/1000/60/60);
+let m=Math.floor(diff/1000/60)%60;
+let s=Math.floor(diff/1000)%60;
+
+timerText.innerText=h+":"+m+":"+s;
+
+}
+
+},1000);
 
 }
 
