@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-
 <meta name="viewport" content="width=device-width,initial-scale=1">
 
 <title>AI BTC</title>
@@ -11,14 +10,14 @@
 body{
 margin:0;
 font-family:sans-serif;
-background:#021f1b;
+background:#022;
 color:white;
 }
 
 .header{
-padding:15px;
-font-size:20px;
 text-align:center;
+padding:15px;
+font-size:22px;
 font-weight:bold;
 }
 
@@ -30,31 +29,30 @@ border-radius:15px;
 }
 
 .balance{
-font-size:26px;
+font-size:28px;
 text-align:center;
 margin-top:10px;
-}
-
-.greenbtn{
-background:#21c087;
-border:none;
-padding:12px;
-border-radius:10px;
-color:white;
-width:45%;
 }
 
 .row{
 display:flex;
 justify-content:space-between;
-margin-top:10px;
+}
+
+button{
+background:#21c087;
+border:none;
+padding:12px;
+border-radius:10px;
+color:white;
+width:48%;
 }
 
 .bottom{
 position:fixed;
 bottom:0;
 width:100%;
-background:#042e29;
+background:#033;
 display:flex;
 justify-content:space-around;
 padding:12px;
@@ -68,27 +66,6 @@ cursor:pointer;
 display:none;
 }
 
-.roi{
-display:flex;
-justify-content:space-between;
-padding:6px 0;
-}
-
-input{
-width:100%;
-padding:10px;
-border-radius:8px;
-border:none;
-}
-
-.copy{
-margin-top:10px;
-background:#21c087;
-border:none;
-padding:10px;
-border-radius:10px;
-}
-
 </style>
 
 </head>
@@ -97,35 +74,42 @@ border-radius:10px;
 
 <div class="header">AI BTC</div>
 
-
-<!-- HOME PAGE -->
+<!-- HOME -->
 
 <div id="homePage">
 
 <div class="card">
 
-<div>You Earned: <b>$<span id="bal">15.24</span></b></div>
+You Earned: $<span id="earned">0</span>
 
 </div>
 
 
 <div class="card">
 
-<div style="text-align:center">USDT / USDC</div>
+<div style="text-align:center">
 
-<div class="balance">$53.39</div>
-
-<div style="text-align:center;margin-top:10px">
-
-Daily Earn: $10.68 (+20%)
+USDT / USDC
 
 </div>
 
-<div style="text-align:center;margin-top:10px">
+<div class="balance">
+
+$<span id="balance">0</span>
+
+</div>
+
+<div style="text-align:center">
+
+Daily Earn: 20%
+
+</div>
+
+<div style="text-align:center">
 
 Settlement time:
 
-<span id="timer">16:13:43</span>
+<span id="timer">24:00:00</span>
 
 </div>
 
@@ -136,9 +120,9 @@ Settlement time:
 
 <div class="row">
 
-<button class="greenbtn">Recharge</button>
+<button onclick="recharge()">Recharge</button>
 
-<button class="greenbtn" onclick="showPage('friends')">
+<button onclick="showPage('friends')">
 
 Invitation
 
@@ -148,41 +132,22 @@ Invitation
 
 </div>
 
-
-<div class="card">
-
-<h3>AI BTC ROI</h3>
-
-<div class="roi"><span>$10</span><span>20%</span></div>
-<div class="roi"><span>$100</span><span>20.5%</span></div>
-<div class="roi"><span>$300</span><span>21%</span></div>
-<div class="roi"><span>$900</span><span>22%</span></div>
-<div class="roi"><span>$2700</span><span>24%</span></div>
-
-</div>
-
 </div>
 
 
-<!-- FRIENDS PAGE -->
+<!-- FRIENDS -->
 
 <div id="friendsPage" class="page">
 
 <div class="card">
 
-<h2>Referral and Earn</h2>
+<h3>Referral Link</h3>
 
-<p>
+<input id="refLink" style="width:100%">
 
-Earn bonus for each referral.
+<br><br>
 
-</p>
-
-<h3>Your Referral Link</h3>
-
-<input id="refLink">
-
-<button class="copy" onclick="copyRef()">
+<button onclick="copyRef()">
 
 Copy Link
 
@@ -193,41 +158,37 @@ Copy Link
 </div>
 
 
-<!-- INTRO PAGE -->
+<!-- INTRO -->
 
 <div id="introPage" class="page">
 
 <div class="card">
 
-<h2>Introduction</h2>
+<h3>Introduction</h3>
 
-<p>
-
-AI BTC trading platform demo dashboard.
-
-</p>
+<p>AI BTC demo platform</p>
 
 </div>
 
 </div>
 
 
-<!-- TASK PAGE -->
+<!-- TASK -->
 
 <div id="taskPage" class="page">
 
 <div class="card">
 
-<h2>Tasks</h2>
+<h3>Tasks</h3>
 
-<p>Invite friends to earn rewards.</p>
-
-</div>
+<p>Invite friends to earn rewards</p>
 
 </div>
 
+</div>
 
-<!-- BOTTOM MENU -->
+
+<!-- BOTTOM -->
 
 <div class="bottom">
 
@@ -244,38 +205,112 @@ AI BTC trading platform demo dashboard.
 
 <script>
 
+
+/* BALANCE SYSTEM */
+
+let balance = localStorage.getItem("balance");
+
+if(balance==null){
+
+balance=0;
+
+localStorage.setItem("balance",0);
+
+}
+
+document.getElementById("balance").innerText = balance;
+
+
+/* RECHARGE */
+
+function recharge(){
+
+let amount = prompt("Enter recharge amount");
+
+if(amount){
+
+let bal = parseFloat(localStorage.getItem("balance"));
+
+bal = bal + parseFloat(amount);
+
+localStorage.setItem("balance",bal);
+
+document.getElementById("balance").innerText = bal;
+
+alert("Recharge successful");
+
+}
+
+}
+
+
+/* TIMER */
+
+let seconds = 86400;
+
+function timer(){
+
+let h = Math.floor(seconds/3600);
+
+let m = Math.floor((seconds%3600)/60);
+
+let s = seconds%60;
+
+document.getElementById("timer").innerText =
+
+h + ":" + m + ":" + s;
+
+seconds--;
+
+if(seconds < 0){
+
+seconds = 86400;
+
+}
+
+}
+
+setInterval(timer,1000);
+
+
+/* PAGE SWITCH */
+
 function showPage(page){
 
 document.getElementById("homePage").style.display="none";
+
 document.getElementById("friendsPage").style.display="none";
+
 document.getElementById("introPage").style.display="none";
+
 document.getElementById("taskPage").style.display="none";
 
-if(page=="home"){
+if(page=="home")
+
 document.getElementById("homePage").style.display="block";
-}
 
-if(page=="friends"){
+if(page=="friends")
+
 document.getElementById("friendsPage").style.display="block";
-}
 
-if(page=="intro"){
+if(page=="intro")
+
 document.getElementById("introPage").style.display="block";
-}
 
-if(page=="task"){
+if(page=="task")
+
 document.getElementById("taskPage").style.display="block";
-}
 
 }
 
 
-let user=Math.floor(Math.random()*100000)
+/* REFERRAL */
+
+let user=Math.floor(Math.random()*100000);
 
 document.getElementById("refLink").value=
 
-location.href+"?ref="+user
-
+location.href+"?ref="+user;
 
 function copyRef(){
 
@@ -283,14 +318,13 @@ navigator.clipboard.writeText(
 
 document.getElementById("refLink").value
 
-)
+);
 
-alert("Referral link copied")
+alert("Link copied");
 
 }
 
 </script>
-
 
 </body>
 
