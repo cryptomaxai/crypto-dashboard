@@ -1,11 +1,5 @@
-<!DOCTYPE html>
-<html>
-<head>
-<meta name="viewport" content="width=device-width,initial-scale=1">
-
-<title>AI BTC</title>
-
-<style>
+<!DOCTYPE html><html>
+<head><meta name="viewport" content="width=device-width,initial-scale=1"><title>AI BTC</title><style>
 
 body{
 margin:0;
@@ -66,147 +60,27 @@ cursor:pointer;
 display:none;
 }
 
-</style>
+</style></head><body><div class="header">AI BTC</div><!-- HOME --><div id="homePage"><div class="card">You Earned: $<span id="earned">0</span>
 
-</head>
+</div><div class="card"><div style="text-align:center">USDT / USDC
 
-<body>
+</div><div class="balance">$<span id="balance">0</span>
 
-<div class="header">AI BTC</div>
+</div><div style="text-align:center">Settlement time:
 
-<!-- HOME -->
+<span id="timer">00:00:00</span>
 
-<div id="homePage">
+</div></div><div class="card"><div class="row"><button onclick="recharge()">Recharge</button>
 
-<div class="card">
+<button onclick="withdraw()">Withdraw</button>
 
-You Earned: $<span id="earned">0</span>
+</div></div></div><!-- FRIENDS --><div id="friendsPage" class="page"><div class="card"><h3>Referral Link</h3><input id="refLink" style="width:100%"><br><br>
 
-</div>
+<button onclick="copyRef()">Copy Link</button>
 
+</div></div><!-- INTRO --><div id="introPage" class="page"><div class="card"><h3>Introduction</h3><p>AI BTC demo platform</p></div></div><!-- TASK --><div id="taskPage" class="page"><div class="card"><h3>Tasks</h3><p>Invite friends to earn rewards</p></div></div><!-- BOTTOM --><div class="bottom"><div onclick="showPage('home')">Home</div><div onclick="showPage('friends')">Friends</div><div onclick="showPage('intro')">Introduction</div><div onclick="showPage('task')">Task</div></div><script>
 
-<div class="card">
-
-<div style="text-align:center">
-
-USDT / USDC
-
-</div>
-
-<div class="balance">
-
-$<span id="balance">0</span>
-
-</div>
-
-<div style="text-align:center">
-
-Daily Earn: 20%
-
-</div>
-
-<div style="text-align:center">
-
-Settlement time:
-
-<span id="timer">24:00:00</span>
-
-</div>
-
-</div>
-
-
-<div class="card">
-
-<div class="row">
-
-<button onclick="recharge()">Recharge</button>
-
-<button onclick="showPage('friends')">
-
-Invitation
-
-</button>
-
-</div>
-
-</div>
-
-</div>
-
-
-<!-- FRIENDS -->
-
-<div id="friendsPage" class="page">
-
-<div class="card">
-
-<h3>Referral Link</h3>
-
-<input id="refLink" style="width:100%">
-
-<br><br>
-
-<button onclick="copyRef()">
-
-Copy Link
-
-</button>
-
-</div>
-
-</div>
-
-
-<!-- INTRO -->
-
-<div id="introPage" class="page">
-
-<div class="card">
-
-<h3>Introduction</h3>
-
-<p>AI BTC demo platform</p>
-
-</div>
-
-</div>
-
-
-<!-- TASK -->
-
-<div id="taskPage" class="page">
-
-<div class="card">
-
-<h3>Tasks</h3>
-
-<p>Invite friends to earn rewards</p>
-
-</div>
-
-</div>
-
-
-<!-- BOTTOM -->
-
-<div class="bottom">
-
-<div onclick="showPage('home')">Home</div>
-
-<div onclick="showPage('friends')">Friends</div>
-
-<div onclick="showPage('intro')">Introduction</div>
-
-<div onclick="showPage('task')">Task</div>
-
-</div>
-
-
-<script>
-
-
-/* BALANCE SYSTEM */
+/* BALANCE */
 
 let balance = localStorage.getItem("balance");
 
@@ -237,6 +111,12 @@ localStorage.setItem("balance",bal);
 
 document.getElementById("balance").innerText = bal;
 
+/* START 24h TIMER */
+
+let endTime = Date.now() + 86400000;
+
+localStorage.setItem("endTime",endTime);
+
 alert("Recharge successful");
 
 }
@@ -244,29 +124,67 @@ alert("Recharge successful");
 }
 
 
-/* TIMER */
+/* WITHDRAW */
 
-let seconds = 86400;
+function withdraw(){
+
+let amount = prompt("Enter withdraw amount");
+
+let bal = parseFloat(localStorage.getItem("balance"));
+
+if(amount > bal){
+
+alert("Not enough balance");
+
+return;
+
+}
+
+bal = bal - amount;
+
+localStorage.setItem("balance",bal);
+
+document.getElementById("balance").innerText = bal;
+
+alert("Withdraw request sent");
+
+}
+
+
+/* TIMER */
 
 function timer(){
 
-let h = Math.floor(seconds/3600);
+let endTime = localStorage.getItem("endTime");
 
-let m = Math.floor((seconds%3600)/60);
+if(!endTime){
 
-let s = seconds%60;
+document.getElementById("timer").innerText="00:00:00";
 
-document.getElementById("timer").innerText =
-
-h + ":" + m + ":" + s;
-
-seconds--;
-
-if(seconds < 0){
-
-seconds = 86400;
+return;
 
 }
+
+let now = Date.now();
+
+let diff = endTime - now;
+
+if(diff <= 0){
+
+document.getElementById("timer").innerText="00:00:00";
+
+return;
+
+}
+
+let h = Math.floor(diff/3600000);
+
+let m = Math.floor((diff%3600000)/60000);
+
+let s = Math.floor((diff%60000)/1000);
+
+document.getElementById("timer").innerText =
+h + ":" + m + ":" + s;
 
 }
 
@@ -286,19 +204,15 @@ document.getElementById("introPage").style.display="none";
 document.getElementById("taskPage").style.display="none";
 
 if(page=="home")
-
 document.getElementById("homePage").style.display="block";
 
 if(page=="friends")
-
 document.getElementById("friendsPage").style.display="block";
 
 if(page=="intro")
-
 document.getElementById("introPage").style.display="block";
 
 if(page=="task")
-
 document.getElementById("taskPage").style.display="block";
 
 }
@@ -309,23 +223,17 @@ document.getElementById("taskPage").style.display="block";
 let user=Math.floor(Math.random()*100000);
 
 document.getElementById("refLink").value=
-
 location.href+"?ref="+user;
 
 function copyRef(){
 
 navigator.clipboard.writeText(
-
 document.getElementById("refLink").value
-
 );
 
 alert("Link copied");
 
 }
 
-</script>
-
-</body>
-
+</script></body>
 </html>
